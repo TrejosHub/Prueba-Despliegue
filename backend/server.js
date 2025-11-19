@@ -8,6 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Ruta principal
+app.get("/", (req, res) => {
+  res.send("🚀 Backend funcionando correctamente en Render");
+});
+
+// GET platos
 app.get("/api/dishes", async (req, res) => {
   try {
     const { data, error } = await supabase.from("dishes").select("*");
@@ -19,16 +25,19 @@ app.get("/api/dishes", async (req, res) => {
   }
 });
 
-// POST: crear plato
+// POST plato
 app.post("/api/dishes", async (req, res) => {
   const { name, price } = req.body;
   const { data, error } = await supabase
     .from("dishes")
     .insert([{ name, price }])
     .select();
+
   if (error) return res.status(500).json({ error: error.message });
   res.status(201).json(data[0]);
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`✅ Servidor en https://prueba-despliegue-czjm.onrender.com/${PORT}`));
+app.listen(PORT, () =>
+  console.log(`✅ Servidor corriendo en puerto ${PORT}`)
+);
